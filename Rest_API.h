@@ -1,0 +1,8 @@
+//
+// Created by thomas on 26/08/22.
+//
+
+#ifndef HOME_ASSITANT_REST_API_REST_API_H
+#define HOME_ASSITANT_REST_API_REST_API_H
+
+#endif //HOME_ASSITANT_REST_API_REST_API_H
