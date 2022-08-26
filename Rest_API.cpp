@@ -62,17 +62,74 @@ public:
 
     //GET - /api/config
     void GET_api_config(){
+        CURL *curl;
+        struct curl_slist *list = NULL;
+        CURLcode res;
+        std::string url = "http://" + haIpPort + "/api/config";
+        std::string auth = "Authorization: Bearer " + token;
 
+        curl = curl_easy_init();
+        if(curl) {
+            curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
+            //curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); //Follow redirects
+            list = curl_slist_append(list, &auth[0]);
+            list = curl_slist_append(list, "Content-Type: application/json");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+            res = curl_easy_perform(curl);
+            if(res != CURLE_OK)
+                fprintf(stderr, "curl_easy_perform() failed");
+            std::cout << res;
+            curl_easy_cleanup(curl);
+        }
+        return;
     }
 
     //GET - /api/events
     void GET_api_events(){
+        CURL *curl;
+        struct curl_slist *list = NULL;
+        CURLcode res;
+        std::string url = "http://" + haIpPort + "/api/events";
+        std::string auth = "Authorization: Bearer " + token;
 
+        curl = curl_easy_init();
+        if(curl) {
+            curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
+            //curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); //Follow redirects
+            list = curl_slist_append(list, &auth[0]);
+            list = curl_slist_append(list, "Content-Type: application/json");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+            res = curl_easy_perform(curl);
+            if(res != CURLE_OK)
+                fprintf(stderr, "curl_easy_perform() failed");
+            std::cout << res;
+            curl_easy_cleanup(curl);
+        }
+        return;
     }
 
     //GET - /api/services
     void GET_api_services(){
+        CURL *curl;
+        struct curl_slist *list = NULL;
+        CURLcode res;
+        std::string url = "http://" + haIpPort + "/api/services";
+        std::string auth = "Authorization: Bearer " + token;
 
+        curl = curl_easy_init();
+        if(curl) {
+            curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
+            //curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); //Follow redirects
+            list = curl_slist_append(list, &auth[0]);
+            list = curl_slist_append(list, "Content-Type: application/json");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+            res = curl_easy_perform(curl);
+            if(res != CURLE_OK)
+                fprintf(stderr, "curl_easy_perform() failed");
+            std::cout << res;
+            curl_easy_cleanup(curl);
+        }
+        return;
     }
 
     //GET - /api/history/period/<timestamp>
@@ -87,7 +144,26 @@ public:
 
     //GET - /api/states
     void GET_api_states(){
+        CURL *curl;
+        struct curl_slist *list = NULL;
+        CURLcode res;
+        std::string url = "http://" + haIpPort + "/api/states";
+        std::string auth = "Authorization: Bearer " + token;
 
+        curl = curl_easy_init();
+        if(curl) {
+            curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
+            //curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); //Follow redirects
+            list = curl_slist_append(list, &auth[0]);
+            list = curl_slist_append(list, "Content-Type: application/json");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+            res = curl_easy_perform(curl);
+            if(res != CURLE_OK)
+                fprintf(stderr, "curl_easy_perform() failed");
+            std::cout << res;
+            curl_easy_cleanup(curl);
+        }
+        return;
     }
 
     //GET - /api/states/<entity_id>
@@ -97,7 +173,26 @@ public:
 
     //GET - /api/error_log
     void GET_api_error_log(){
+        CURL *curl;
+        struct curl_slist *list = NULL;
+        CURLcode res;
+        std::string url = "http://" + haIpPort + "/api/error_log";
+        std::string auth = "Authorization: Bearer " + token;
 
+        curl = curl_easy_init();
+        if(curl) {
+            curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
+            //curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); //Follow redirects
+            list = curl_slist_append(list, &auth[0]);
+            list = curl_slist_append(list, "Content-Type: application/json");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+            res = curl_easy_perform(curl);
+            if(res != CURLE_OK)
+                fprintf(stderr, "curl_easy_perform() failed");
+            std::cout << res;
+            curl_easy_cleanup(curl);
+        }
+        return;
     }
 
     //GET - /api/camera_proxy/<camera entity_id>
@@ -107,7 +202,26 @@ public:
 
     //GET - /api/calendars
     void GET_api_calendars(){
+        CURL *curl;
+        struct curl_slist *list = NULL;
+        CURLcode res;
+        std::string url = "http://" + haIpPort + "/api/calendars";
+        std::string auth = "Authorization: Bearer " + token;
 
+        curl = curl_easy_init();
+        if(curl) {
+            curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
+            //curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); //Follow redirects
+            list = curl_slist_append(list, &auth[0]);
+            list = curl_slist_append(list, "Content-Type: application/json");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+            res = curl_easy_perform(curl);
+            if(res != CURLE_OK)
+                fprintf(stderr, "curl_easy_perform() failed");
+            std::cout << res;
+            curl_easy_cleanup(curl);
+        }
+        return;
     }
 
     //GET - /api/calendars/<calendar entity_id>
@@ -217,7 +331,12 @@ public:
 int main() {
     HomeAssistant ha;
     //ha.domainTurnOff("switch", "thomas_fernseher");
-    ha.GET_api();
+    //ha.GET_api();
+    //ha.GET_api_config();
+    //ha.GET_api_events();
+    //ha.GET_api_states();
+    //ha.GET_api_error_log();
+    //ha.GET_api_calendars();
     std::cout << "Hello, World!" << std::endl;
     return 0;
 }
