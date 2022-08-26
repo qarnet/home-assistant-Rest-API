@@ -3,12 +3,11 @@ project(home_assitant_Rest_API)
 
 set(CMAKE_CXX_STANDARD 14)
 
-#find_package(CURL)
-#Remove target_link_libraries and make this work in the future
-
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/secrets.txt
         ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
+find_package(CURL)
+
 add_executable(home_assitant_Rest_API Rest_API.cpp Rest_API.h main.cpp)
-target_link_libraries(home_assitant_Rest_API /usr/lib64/libcurl.so)
+target_link_libraries(home_assitant_Rest_API curl)
 
