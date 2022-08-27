@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 find_package(CURL)
 
-add_executable(home_assitant_Rest_API Rest_API.cpp Rest_API.h)
+add_library(home_assitant_Rest_API Rest_API.cpp Rest_API.h)
 target_link_libraries(home_assitant_Rest_API curl)
+
 
