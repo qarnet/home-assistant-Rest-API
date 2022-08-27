@@ -1,14 +1,15 @@
 //
 // Created by thomas on 26/08/22.
 //
-#include <string>
 #ifndef HOME_ASSISTANT_REST_API_REST_API_H
 #define HOME_ASSISTANT_REST_API_REST_API_H
+#include <string>
+
 class HomeAssistant{
 private:
     std::string haIpPort, entityID, token;
 public:
-    HomeAssistant();
+    HomeAssistant(std::string haipport, std::string token);
     void GET_api();
     std::string GET_api_config();
     void GET_api_events();

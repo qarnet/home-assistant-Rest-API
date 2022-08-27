@@ -1,34 +1,13 @@
 #include <iostream>
 #include <curl/curl.h>
-#include <fstream>
 #include <string>
 #include "Rest_API.h"
 
 
-//Constructor, will read out the port/ip of home-assistant and the token from the secrets file
-HomeAssistant::HomeAssistant(){
-    std::string searchHaIpPort = "HAIPPORT";
-    std::string searchToken = "TOKEN";
-    std::string currentLine;
-    //std::string filename = "/home/thomas/CLionProjects/home-assitant-Rest-API/secrets"; //Change to relative Filepath!!!!!!!!!!!
-    std::string filename = "secrets.txt";
-    std::ifstream secretsFile(filename);
-    if(!secretsFile.is_open()){
-        std::cout << "File failed to open: " << filename << "\n";
-    }
-    else{
-        while(getline(secretsFile, currentLine)){
-            if(currentLine.find(searchHaIpPort) != std::string::npos){
-                haIpPort = currentLine.substr(searchHaIpPort.length() + 1);
-                //std::cout << haIpPort << "\n"; //Debug
-            }
-            if(currentLine.find(searchToken) != std::string::npos){
-                token = currentLine.substr(searchToken.length() + 1);
-                //std::cout << token << "\n"; //Debug
-            }
-        }
-    }
-
+//Constructor, will read out the port/ip of home-assistant and the token
+HomeAssistant::HomeAssistant(std::string haipport, std::string token){
+    this->haIpPort = haipport;
+    this->token = token;
 }
 
 //GET - /api/
