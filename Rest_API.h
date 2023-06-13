@@ -1,6 +1,3 @@
-//
-// Created by thomas on 26/08/22.
-//
 #ifndef HOME_ASSISTANT_REST_API_REST_API_H
 #define HOME_ASSISTANT_REST_API_REST_API_H
 #include <string>
