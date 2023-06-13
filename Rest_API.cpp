@@ -31,7 +31,7 @@ CURLcode HomeAssistant::curlGetFormatter(std::string _request)
         curl_easy_cleanup(curl);
     }
     curl_global_cleanup();
-    
+
     return res;
 }
 
@@ -208,7 +208,6 @@ void HomeAssistant::GET_api_calendars(std::string calendar_entity_id, //E.G. cal
     return;
 }
 
-//POST - /api/states/<entity_id>
 void HomeAssistant::POST_api_states(std::string entity_id,
                                     std::string data //E.G. "state": "25", "attributes": {"unit_of_measurement": "°C"}
 ){
@@ -235,7 +234,6 @@ void HomeAssistant::POST_api_states(std::string entity_id,
     curl_global_cleanup();
 }
 
-//POST - /api/events/<event_type>
 //NOT DONE!!!!!!!!!
 void HomeAssistant::POST_api_events(std::string event_type){
     CURL *curl;
@@ -261,7 +259,6 @@ void HomeAssistant::POST_api_events(std::string event_type){
     curl_global_cleanup();
 }
 
-//POST - /api/services/<domain>/<services>
 void HomeAssistant::domainTurnOn(std::string domain, std::string service){
     std::string url = "http://" + haIpPort + "/api/services/"+ domain + "/turn_on";
     std::string postfields = "{\"entity_id\": \"" + domain + "." + service + "\"}";
@@ -269,7 +266,6 @@ void HomeAssistant::domainTurnOn(std::string domain, std::string service){
     this->curlPostFormatter(url, postfields);
 }
 
-//POST - /api/services/<domain>/<services>
 void HomeAssistant::domainTurnOff(std::string domain, std::string service){
     std::string url = "http://" + haIpPort + "/api/services/"+ domain + "/turn_off";
     std::string postfields = "{\"entity_id\": \"" + domain + "." + service + "\"}";
@@ -277,7 +273,6 @@ void HomeAssistant::domainTurnOff(std::string domain, std::string service){
     this->curlPostFormatter(url, postfields);
 }
 
-//POST - /api/services/<domain>/<services>
 void HomeAssistant::mqttPublish(std::string payload, std::string topic, std::string retain){
     std::string url = "http://" + haIpPort + "/api/services/mqtt/publish";
     std::string postfields = "{\"payload\": \"" + payload + "\", \"topic\": \"" + topic + "\", \"retain\": \"" + retain + "\"}";
@@ -285,7 +280,6 @@ void HomeAssistant::mqttPublish(std::string payload, std::string topic, std::str
     this->curlPostFormatter(url, postfields);
 }
 
-//POST - /api/template
 void HomeAssistant::POST_api_template(std::string data){
     std::string url = "http://" + haIpPort + "/api/template";
     //std::string postfields = "{\"entity_id\": \"" + domain + "." + service + "\"}";
@@ -294,7 +288,6 @@ void HomeAssistant::POST_api_template(std::string data){
     this->curlPostFormatter(url, postfields);
 }
 
-//POST - /api/config/core/check_config
 void HomeAssistant::POST_api_config_core_check_config(){
 
     std::string url = "http://" + haIpPort + "/api/config/core/check_config";
@@ -303,7 +296,6 @@ void HomeAssistant::POST_api_config_core_check_config(){
     this->curlPostFormatter(url, "");
 }
 
-//POST - /api/intent/handle
 void HomeAssistant::POST_api_intent_handle(std::string data){
     std::string url = "http://" + haIpPort + "api/intent/handle";
     //std::string postfields = "{\"entity_id\": \"" + domain + "." + service + "\"}";
