@@ -8,7 +8,8 @@
 class HomeAssistant{
 private:
     std::string haIpPort, entityID, token;
-    CURLcode curlFormatter(std::string _request);
+    CURLcode curlGetFormatter(std::string _request);
+    CURLcode curlPostFormatter(std::string _url, std::string _postfields);
 public:
     HomeAssistant(std::string haipport, std::string token);
     void GET_api();

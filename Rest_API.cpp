@@ -7,7 +7,7 @@ HomeAssistant::HomeAssistant(std::string haipport, std::string token){
     this->token = token;
 }
 
-CURLcode HomeAssistant::curlFormatter(std::string _request)
+CURLcode HomeAssistant::curlGetFormatter(std::string _request)
 {
     CURL *curl;
     struct curl_slist *list = NULL;
@@ -30,23 +30,53 @@ CURLcode HomeAssistant::curlFormatter(std::string _request)
         }
         curl_easy_cleanup(curl);
     }
+    curl_global_cleanup();
+    
+    return res;
+}
+
+CURLcode HomeAssistant::curlPostFormatter(std::string _url, std::string _postfields)
+{
+    CURL *curl;
+    struct curl_slist *list = NULL;
+    CURLcode res;
+    std::string url = _url;
+    std::string postfields = _postfields;
+    std::string auth = "Authorization: Bearer " + token;
+
+    curl = curl_easy_init();
+    if(curl){
+        curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, &postfields[0]);
+        list = curl_slist_append(list, &auth[0]);
+        list = curl_slist_append(list, "Content-Type: application/json");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+        res = curl_easy_perform(curl);
+        if(res != CURLE_OK)
+        {
+            fprintf(stderr, "curl_easy_perform() failed");
+        }
+        curl_easy_cleanup(curl);
+    }
+    curl_global_cleanup();
+
     return res;
 }
 
 void HomeAssistant::GET_api(){
-    this->curlFormatter("/api/");
+    this->curlGetFormatter("/api/");
 }
 
 void HomeAssistant::GET_api_config(){
-    this->curlFormatter("/api/config");
+    this->curlGetFormatter("/api/config");
 }
 
 void HomeAssistant::GET_api_events(){
-    this->curlFormatter("/api/events");
+    this->curlGetFormatter("/api/events");
 }
 
 void HomeAssistant::GET_api_services(){
-    this->curlFormatter("/api/services");
+    this->curlGetFormatter("/api/services");
 }
 
 //No arguments defaults to 1 day before the time of the request
@@ -132,24 +162,24 @@ void HomeAssistant::GET_api_logbook(std::string timestamp,
 }
 
 void HomeAssistant::GET_api_states(){
-    this->curlFormatter("/api/states");
+    this->curlGetFormatter("/api/states");
 }
 
 void HomeAssistant::GET_api_states(std::string entity_id){ //E.G. sensor.kitchen_temperature
-    this->curlFormatter("/api/states/" + entity_id);
+    this->curlGetFormatter("/api/states/" + entity_id);
 }
 
 void HomeAssistant::GET_api_error_log(){
-    this->curlFormatter("/api/error_log");
+    this->curlGetFormatter("/api/error_log");
 }
 
 void HomeAssistant::GET_api_camera_proxy(std::string camera_entity_id){ //E.G. camera.my_sample_camera
-    this->curlFormatter("/api/camera_proxy/" + camera_entity_id);
+    this->curlGetFormatter("/api/camera_proxy/" + camera_entity_id);
 }
 
 //Doesn't work? 404
 void HomeAssistant::GET_api_calendars(){
-    this->curlFormatter("/api/calendars");
+    this->curlGetFormatter("/api/calendars");
 }
 
 void HomeAssistant::GET_api_calendars(std::string calendar_entity_id, //E.G. calendar.holidays
@@ -233,149 +263,52 @@ void HomeAssistant::POST_api_events(std::string event_type){
 
 //POST - /api/services/<domain>/<services>
 void HomeAssistant::domainTurnOn(std::string domain, std::string service){
-    CURL *curl;
-    struct curl_slist *list = NULL;
-    CURLcode res;
     std::string url = "http://" + haIpPort + "/api/services/"+ domain + "/turn_on";
     std::string postfields = "{\"entity_id\": \"" + domain + "." + service + "\"}";
-    std::string auth = "Authorization: Bearer " + token;
 
-    curl = curl_easy_init();
-    if(curl){
-        curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, &postfields[0]);
-        list = curl_slist_append(list, &auth[0]);
-        list = curl_slist_append(list, "Content-Type: application/json");
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
-        res = curl_easy_perform(curl);
-        if(res != CURLE_OK)
-            fprintf(stderr, "curl_easy_perform() failed");
-        curl_easy_cleanup(curl);
-    }
-    curl_global_cleanup();
+    this->curlPostFormatter(url, postfields);
 }
 
 //POST - /api/services/<domain>/<services>
 void HomeAssistant::domainTurnOff(std::string domain, std::string service){
-    CURL *curl;
-    struct curl_slist *list = NULL;
-    CURLcode res;
     std::string url = "http://" + haIpPort + "/api/services/"+ domain + "/turn_off";
     std::string postfields = "{\"entity_id\": \"" + domain + "." + service + "\"}";
-    std::string auth = "Authorization: Bearer " + token;
 
-    curl = curl_easy_init();
-    if(curl){
-        curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, &postfields[0]);
-        list = curl_slist_append(list, &auth[0]);
-        list = curl_slist_append(list, "Content-Type: application/json");
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
-        res = curl_easy_perform(curl);
-        if(res != CURLE_OK)
-            fprintf(stderr, "curl_easy_perform() failed");
-        curl_easy_cleanup(curl);
-    }
-    curl_global_cleanup();
+    this->curlPostFormatter(url, postfields);
 }
 
 //POST - /api/services/<domain>/<services>
 void HomeAssistant::mqttPublish(std::string payload, std::string topic, std::string retain){
-    CURL *curl;
-    struct curl_slist *list = NULL;
-    CURLcode res;
     std::string url = "http://" + haIpPort + "/api/services/mqtt/publish";
     std::string postfields = "{\"payload\": \"" + payload + "\", \"topic\": \"" + topic + "\", \"retain\": \"" + retain + "\"}";
-    std::string auth = "Authorization: Bearer " + token;
 
-    curl = curl_easy_init();
-    if(curl){
-        curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, &postfields[0]);
-        list = curl_slist_append(list, &auth[0]);
-        list = curl_slist_append(list, "Content-Type: application/json");
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
-        std::cout << url << std::endl << postfields << std::endl << auth;
-        res = curl_easy_perform(curl);
-        if(res != CURLE_OK)
-            fprintf(stderr, "curl_easy_perform() failed");
-        curl_easy_cleanup(curl);
-    }
-    curl_global_cleanup();
+    this->curlPostFormatter(url, postfields);
 }
 
 //POST - /api/template
 void HomeAssistant::POST_api_template(std::string data){
-    CURL *curl;
-    struct curl_slist *list = NULL;
-    CURLcode res;
     std::string url = "http://" + haIpPort + "/api/template";
     //std::string postfields = "{\"entity_id\": \"" + domain + "." + service + "\"}";
     std::string postfields = "{" + data + "}";
-    std::string auth = "Authorization: Bearer " + token;
 
-    curl = curl_easy_init();
-    if(curl){
-        curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, &postfields[0]);
-        list = curl_slist_append(list, &auth[0]);
-        list = curl_slist_append(list, "Content-Type: application/json");
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
-        res = curl_easy_perform(curl);
-        if(res != CURLE_OK)
-            fprintf(stderr, "curl_easy_perform() failed");
-        curl_easy_cleanup(curl);
-    }
-    curl_global_cleanup();
+    this->curlPostFormatter(url, postfields);
 }
 
 //POST - /api/config/core/check_config
 void HomeAssistant::POST_api_config_core_check_config(){
-    CURL *curl;
-    struct curl_slist *list = NULL;
-    CURLcode res;
+
     std::string url = "http://" + haIpPort + "/api/config/core/check_config";
     //std::string postfields = "{\"entity_id\": \"" + domain + "." + service + "\"}";
     //no postfields needed????
-    std::string auth = "Authorization: Bearer " + token;
-
-    curl = curl_easy_init();
-    if(curl){
-        curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
-        //curl_easy_setopt(curl, CURLOPT_POSTFIELDS, &postfields[0]);
-        list = curl_slist_append(list, &auth[0]);
-        list = curl_slist_append(list, "Content-Type: application/json");
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
-        res = curl_easy_perform(curl);
-        if(res != CURLE_OK)
-            fprintf(stderr, "curl_easy_perform() failed");
-        curl_easy_cleanup(curl);
-    }
-    curl_global_cleanup();
+    this->curlPostFormatter(url, "");
 }
 
 //POST - /api/intent/handle
 void HomeAssistant::POST_api_intent_handle(std::string data){
-    CURL *curl;
-    struct curl_slist *list = NULL;
-    CURLcode res;
     std::string url = "http://" + haIpPort + "api/intent/handle";
     //std::string postfields = "{\"entity_id\": \"" + domain + "." + service + "\"}";
     std::string postfields = "{" + data + "}";
-    std::string auth = "Authorization: Bearer " + token;
 
-    curl = curl_easy_init();
-    if(curl){
-        curl_easy_setopt(curl, CURLOPT_URL, &url[0]);
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, &postfields[0]);
-        list = curl_slist_append(list, &auth[0]);
-        list = curl_slist_append(list, "Content-Type: application/json");
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
-        res = curl_easy_perform(curl);
-        if(res != CURLE_OK)
-            fprintf(stderr, "curl_easy_perform() failed");
-        curl_easy_cleanup(curl);
-    }
-    curl_global_cleanup();
+    this->curlPostFormatter(url, postfields);
 }
 
